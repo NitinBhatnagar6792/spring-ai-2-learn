@@ -53,6 +53,12 @@ aspects of the input images.
 
 >>>
 ```
+1.f Stop llama3:
+
+```bash
+ollama stop llama3
+```
+
 ### 2. Additional Useful Ollama commands
 
 2.a You can stop llama3 by pressing CTRL+C and then CTRL+D
