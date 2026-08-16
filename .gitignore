@@ -1,8 +1,12 @@
 # Compiled class file
+target/
 *.class
 
 # Log file
 *.log
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
 # BlueJ files
 *.ctxt
