@@ -14,21 +14,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/ai-chat")
 
 public class AIChatController {
-	
-    // Define the logger instance manually
-    private static final Logger logger = LoggerFactory.getLogger(AIChatController.class);
 
-    private final ChatClient chatClient;
-	
+	// Define the logger instance manually
+	private static final Logger logger = LoggerFactory.getLogger(AIChatController.class);
+
+	private final ChatClient chatClient;
+
 	public AIChatController(ChatClient.Builder chatClientBuilder) {
 		chatClient = chatClientBuilder.build();
 	}
-	
+
 	@GetMapping("/basic")
-	ResponseEntity<?> basicChat(@RequestParam  String prompt) {
+	public ResponseEntity<String> basicChat(@RequestParam String prompt) {
 		logger.info("prompt received={}", prompt);
+
+		if (prompt == null || prompt.isBlank()) {
+			return ResponseEntity.badRequest().body("Prompt cannot be empty");
+		}
+
 		String llmResponse = chatClient
 				.prompt()
+				.system("You are a helpful Java programming assistant.")
 				.user(prompt)
 				.call()
 				.content();
