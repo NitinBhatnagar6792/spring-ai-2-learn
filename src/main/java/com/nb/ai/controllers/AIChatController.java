@@ -121,9 +121,9 @@ public class AIChatController {
 		SystemMessage systemMessage = new SystemMessage(
 				"You are a expert java teacher who is good in providing short answers with in 30 words.");
 
-	    PromptTemplate template = new PromptTemplate("Explain the Java {javaTerm} term in simple words.");
+		PromptTemplate userMessageTemplate = new PromptTemplate("Explain the Java {javaTerm} term in simple words.");
 
-		UserMessage userMessage = template.create(Map.of("javaTerm", javaTerm)).getUserMessage();
+		UserMessage userMessage = userMessageTemplate.create(Map.of("javaTerm", javaTerm)).getUserMessage();
 
 		ChatOptions options = ChatOptions.builder()
 				.maxTokens(50)
