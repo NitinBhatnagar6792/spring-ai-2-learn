@@ -1,8 +1,14 @@
 package com.nb.ai.controllers;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.messages.SystemMessage;
+import org.springframework.ai.chat.messages.UserMessage;
+import org.springframework.ai.chat.prompt.ChatOptions;
+import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,4 +47,31 @@ public class AIChatController {
 		logger.info("response from llm = {}", llmResponse);
 		return ResponseEntity.status(HttpStatus.OK).body(llmResponse);
 	}
+
+	@GetMapping("/basic2")
+	public ResponseEntity<String> basicChat2(@RequestParam String prompt) {
+		logger.info("prompt received={}", prompt);
+
+		if (prompt == null || prompt.isBlank()) {
+			return ResponseEntity.badRequest().body("Prompt cannot be empty");
+		}
+
+		SystemMessage systemMessage = new SystemMessage(
+				"You are a helpful assistant who is good in providing answers with in 50 words");
+
+		UserMessage userMessage = new UserMessage(prompt);
+
+		ChatOptions options = ChatOptions.builder().maxTokens(50).build();
+
+		Prompt thePrompt = new Prompt(List.of(systemMessage, userMessage), options);
+
+		String llmResponse = chatClient
+				.prompt(thePrompt)
+				.call()
+				.content();
+
+		logger.info("response from llm = {}", llmResponse);
+		return ResponseEntity.status(HttpStatus.OK).body(llmResponse);
+	}
+
 }
