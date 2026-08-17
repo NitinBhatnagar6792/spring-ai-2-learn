@@ -9,6 +9,7 @@ import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.ChatOptions;
 import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.ollama.api.OllamaChatOptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,10 +62,40 @@ public class AIChatController {
 
 		UserMessage userMessage = new UserMessage(prompt);
 
-		ChatOptions options = ChatOptions.builder()
-				.maxTokens(50)
-				.temperature(.7)
+		//ChatOptions options = ChatOptions.builder()
+		//		.maxTokens(50)
+		//		.temperature(.7)
+		//		.build();
+
+		// Since we know have configured ollama model we can used options which are valid in ollama
+		OllamaChatOptions options = OllamaChatOptions.builder()
+				.model("llama3")    // need or else it get error org.springframework.ai.retry.NonTransientAiException: HTTP 404 - {"error":"model 'mistral' not found"}
+				.maxTokens(50) 		// How long can the answer be?
+				.temperature(.7) 	// How random/creative should it be?
+				.topK(3)			// the model considers only the top k candidates i.e. Give me the best K candidates
+				.topP(.8)			// Give me enough candidates to cover P of the probability i.e. TopP controls the cumulative probability mass of candidate tokens.
 				.build();
+
+		/* How topP works if given as topP(.8)
+			 Suppose the model produces:
+				Token          Probability
+				--------------------------
+				A              0.40
+				B              0.25
+				C              0.15
+				D              0.10
+				E              0.05
+				F              0.03
+				G              0.02
+
+			 We keep tokens until cumulative probability reaches approximately 0.80
+				A = 0.40
+				B = 0.25    → 0.65
+				C = 0.15    → 0.80
+
+			 So the candidate set becomes: A, B, C
+		 */
+
 
 		Prompt thePrompt = new Prompt(List.of(systemMessage, userMessage), options);
 
