@@ -48,7 +48,7 @@ public class AIChatController {
 		return ResponseEntity.status(HttpStatus.OK).body(llmResponse);
 	}
 
-	@GetMapping("/basic2")
+	@GetMapping("/basic-with-options")
 	public ResponseEntity<String> basicChat2(@RequestParam String prompt) {
 		logger.info("prompt received={}", prompt);
 
@@ -57,11 +57,14 @@ public class AIChatController {
 		}
 
 		SystemMessage systemMessage = new SystemMessage(
-				"You are a helpful assistant who is good in providing answers with in 50 words");
+				"You are a helpful assistant who is good in providing short answers with in 30 words");
 
 		UserMessage userMessage = new UserMessage(prompt);
 
-		ChatOptions options = ChatOptions.builder().maxTokens(50).build();
+		ChatOptions options = ChatOptions.builder()
+				.maxTokens(50)
+				.temperature(.7)
+				.build();
 
 		Prompt thePrompt = new Prompt(List.of(systemMessage, userMessage), options);
 
