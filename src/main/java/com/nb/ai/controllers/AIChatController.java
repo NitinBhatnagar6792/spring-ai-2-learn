@@ -169,8 +169,10 @@ public class AIChatController {
 		UserMessage userMessage = userPrompt.getUserMessage();
 
 		ChatOptions options = ChatOptions.builder()
-				.maxTokens(1000)
-				.temperature(.7)
+				.maxTokens(500)
+				.temperature(0.5)
+				.topK(20)
+				.topP(.9)
 				.build();
 
 		Prompt thePrompt = new Prompt(List.of(systemMessage, userMessage), options);
