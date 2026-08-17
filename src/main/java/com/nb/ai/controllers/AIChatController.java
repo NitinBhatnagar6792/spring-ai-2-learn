@@ -11,6 +11,7 @@ import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.ChatOptions;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
+import org.springframework.ai.converter.BeanOutputConverter;
 import org.springframework.ai.ollama.api.OllamaChatOptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.nb.ai.dto.CourseResponse;
 
 @RestController
 @RequestMapping("/ai-chat")
@@ -142,4 +145,43 @@ public class AIChatController {
 		return ResponseEntity.status(HttpStatus.OK).body(llmResponse);
 	}
 
+	@GetMapping("/basic-with-response-converter")
+	public ResponseEntity<CourseResponse> basicWithResponseConverter(@RequestParam String courseCategory) {
+		logger.info("course category received={}", courseCategory);
+
+		if (courseCategory == null || courseCategory.isBlank()) {
+			throw new RuntimeException("courseCategory cannot be empty");
+		}
+
+		SystemMessage systemMessage = new SystemMessage(
+				"You are an expert librarian who knows all the name of the books and courses by heart.");
+
+		PromptTemplate userMessageTemplate = new PromptTemplate("""
+		        List 5 courses related to {courseCategory}.
+		        Return the response strictly in the following format:
+		        {format}
+		        """);
+		
+		BeanOutputConverter<CourseResponse> converter = new BeanOutputConverter<>(CourseResponse.class);
+		String format = converter.getFormat();
+		
+		Prompt userPrompt = userMessageTemplate.create(Map.of("courseCategory", courseCategory, "format", format));
+		UserMessage userMessage = userPrompt.getUserMessage();
+
+		ChatOptions options = ChatOptions.builder()
+				.maxTokens(1000)
+				.temperature(.7)
+				.build();
+
+		Prompt thePrompt = new Prompt(List.of(systemMessage, userMessage), options);
+
+		String llmResponse = chatClient
+				.prompt(thePrompt)
+				.call()
+				.content();
+
+		logger.info("response from llm = {}", llmResponse);
+		return ResponseEntity.status(HttpStatus.OK).body(converter.convert(llmResponse));
+	}
+	
 }
