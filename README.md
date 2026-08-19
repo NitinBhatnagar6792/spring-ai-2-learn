@@ -76,6 +76,20 @@ ollama ps
 ollama rm llama3
 ```
 
+### 3. Replacing llama3 with llama3.2 model as my laptop has limited memory
+Reason: llama3 used around 5 GB where as llama3.2:1b use around 2 GB
+
+```bash
+ollama rm llama3
+ollama pull llama3.2
+ollama run llama3.2 
+```
+
+```
+ollama list
+NAME               ID              SIZE      MODIFIED
+llama3.2:latest    a80c4f17acd5    2.0 GB    19 minutes ago
+```
 
 
 

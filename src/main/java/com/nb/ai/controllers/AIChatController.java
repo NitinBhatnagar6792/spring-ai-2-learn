@@ -13,6 +13,7 @@ import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.converter.BeanOutputConverter;
 import org.springframework.ai.ollama.api.OllamaChatOptions;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,9 @@ import com.nb.ai.dto.CourseResponse;
 
 public class AIChatController {
 
+	@Value("${spring.ai.ollama.chat.model}")
+	private String ollamaModel;
+	
 	// Define the logger instance manually
 	private static final Logger logger = LoggerFactory.getLogger(AIChatController.class);
 
@@ -74,7 +78,7 @@ public class AIChatController {
 
 		// Since we know have configured ollama model we can used options which are valid in ollama
 		OllamaChatOptions options = OllamaChatOptions.builder()
-				.model("llama3")    // need or else it get error org.springframework.ai.retry.NonTransientAiException: HTTP 404 - {"error":"model 'mistral' not found"}
+				.model(ollamaModel)    // need or else it get error org.springframework.ai.retry.NonTransientAiException: HTTP 404 - {"error":"model 'mistral' not found"}
 				.maxTokens(50) 		// How long can the answer be?
 				.temperature(.7) 	// How random/creative should it be?
 				.topK(3)			// the model considers only the top k candidates i.e. Give me the best K candidates
