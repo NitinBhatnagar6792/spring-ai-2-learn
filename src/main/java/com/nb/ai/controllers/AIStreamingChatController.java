@@ -81,7 +81,7 @@ public class AIStreamingChatController {
 
 	private SseEmitter createSseEmitter() {
 		
-		SseEmitter emitter = new SseEmitter(60_000L);
+		SseEmitter emitter = new SseEmitter(SSE_EMITTER_TIMEOUT);
 		emitter.onTimeout(() -> {
 		    logger.warn("SSE connection timed out");
 		    emitter.complete();
