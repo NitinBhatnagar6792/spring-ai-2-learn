@@ -20,7 +20,7 @@ public class AIStreamingChatController {
 
 	// Define the logger instance manually
 	private static final Logger logger = LoggerFactory.getLogger(AIStreamingChatController.class);
-    private final Long SSE_EMITTER_TIMEOUT = 60_000L;
+    private static final long SSE_EMITTER_TIMEOUT = 60_000L;
 	
 	private final ChatClient chatClient;
 	
@@ -109,19 +109,19 @@ public class AIStreamingChatController {
 		    // Every token/chunk
 		    token -> {
 		        try {
-				    logger.info("thread: [{}], received token:{}", Thread.currentThread().getName(), token);
+				    logger.info("thread: [{}], received token: {}", Thread.currentThread().getName(), token);
 		            emitter.send(
 		                SseEmitter.event().data(token)
 		            );
 		        } catch (Exception e) {
-				    logger.error("error occured while processing token:{}", token);
+				    logger.error("Error occurred while processing token: {}", token, e);
 		            emitter.completeWithError(e);
 		        }
 		    },
 
 		    // If something goes wrong
 		    error -> {
-			    logger.error("erorr occured {}", error);
+			    logger.error("Error occurred while streaming response {}", error);
 		        emitter.completeWithError(error);
 		    },
 
