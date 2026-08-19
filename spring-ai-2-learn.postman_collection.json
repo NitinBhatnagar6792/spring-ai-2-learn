@@ -1,0 +1,390 @@
+{
+  "info": {
+    "_postman_id": "d8eaf8a4-b080-440b-86dd-c010b7cc31a3",
+    "name": "spring-ai-2-learn",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52750859",
+    "_collection_link": "https://go.postman.co/collection/52750859-d8eaf8a4-b080-440b-86dd-c010b7cc31a3?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "ollama-build-in-apis",
+      "item": [
+        {
+          "name": "ollama-check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:11434/",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "11434",
+              "path": [
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get-ollama-api-tags",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:11434/api/tags",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "11434",
+              "path": [
+                "api",
+                "tags"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get-ollama-version",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:11434/api/version",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "11434",
+              "path": [
+                "api",
+                "version"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get-ollama-running-models",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:11434/api/ps",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "11434",
+              "path": [
+                "api",
+                "ps"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "start-or-load-a-model",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"model\": \"llama3\",\r\n  \"prompt\": \"Explain dependency injection in Spring Boot in 2 sentences.\",\r\n  \"stream\": false\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:11434/api/generate",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "11434",
+              "path": [
+                "api",
+                "generate"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "chat-with-the-model",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"model\": \"llama3\",\r\n  \"messages\": [\r\n    {\r\n      \"role\": \"user\",\r\n      \"content\": \"What is Spring AI?\"\r\n    }\r\n  ],\r\n  \"stream\": false,\r\n  \"options\": {\r\n    \"num_predict\": 10 // small value will speed up the total api response\r\n  }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:11434/api/chat",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "11434",
+              "path": [
+                "api",
+                "chat"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "chat-with-the-model-with-streaming",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"model\": \"llama3\",\r\n  \"messages\": [\r\n    {\r\n      \"role\": \"user\",\r\n      \"content\": \"What is Spring AI?\"\r\n    }\r\n  ],\r\n  \"stream\": true,\r\n  \"options\": {\r\n    \"num_predict\": 100 // small value will speed up the total api response\r\n  }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:11434/api/chat",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "11434",
+              "path": [
+                "api",
+                "chat"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "spring-boot-ai",
+      "item": [
+        {
+          "name": "health-check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9002/health-check",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9002",
+              "path": [
+                "health-check"
+              ]
+            },
+            "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+          },
+          "response": []
+        },
+        {
+          "name": "basic-chat",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9002/ai-chat/basic?prompt=Tell me a name of a planet belonging to our solar system",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9002",
+              "path": [
+                "ai-chat",
+                "basic"
+              ],
+              "query": [
+                {
+                  "key": "prompt",
+                  "value": "Tell me a name of a planet belonging to our solar system"
+                }
+              ]
+            },
+            "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+          },
+          "response": []
+        },
+        {
+          "name": "basic-chat-with-options",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9002/ai-chat/basic-with-options?prompt=Tell me about mango fruit",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9002",
+              "path": [
+                "ai-chat",
+                "basic-with-options"
+              ],
+              "query": [
+                {
+                  "key": "prompt",
+                  "value": "Tell me about mango fruit"
+                }
+              ]
+            },
+            "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+          },
+          "response": []
+        },
+        {
+          "name": "basic-chat-using-template",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9002/ai-chat/basic-using-template?javaTerm=catch",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9002",
+              "path": [
+                "ai-chat",
+                "basic-using-template"
+              ],
+              "query": [
+                {
+                  "key": "javaTerm",
+                  "value": "catch"
+                }
+              ]
+            },
+            "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+          },
+          "response": []
+        },
+        {
+          "name": "basic-chat-with-response-converter",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9002/ai-chat/basic-with-response-converter?courseCategory=Physics",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9002",
+              "path": [
+                "ai-chat",
+                "basic-with-response-converter"
+              ],
+              "query": [
+                {
+                  "key": "courseCategory",
+                  "value": "Physics"
+                }
+              ]
+            },
+            "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

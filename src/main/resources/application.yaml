@@ -1,3 +1,9 @@
 spring:
   application:
     name: spring-ai2-learn
+
+  ai:
+    ollama:
+      base-url: http://localhost:11434/
+      chat:
+        model: llama3
