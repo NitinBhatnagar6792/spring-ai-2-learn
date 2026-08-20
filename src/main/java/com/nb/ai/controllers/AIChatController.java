@@ -13,6 +13,7 @@ import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.converter.BeanOutputConverter;
 import org.springframework.ai.ollama.api.OllamaChatOptions;
+import org.springframework.ai.ollama.api.OllamaModel;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nb.ai.dto.CourseResponse;
+
+import jakarta.annotation.PostConstruct;
 
 @RestController
 @RequestMapping("/ai-chat")
@@ -40,6 +43,20 @@ public class AIChatController {
 		chatClient = chatClientBuilder.build();
 	}
 
+	@PostConstruct
+	public void validateOllamaModel() {
+		if (ollamaModel == null || ollamaModel.isBlank()) {
+			throw new IllegalStateException("spring.ai.ollama.chat.model must be configured");
+		}
+		// Add your supported-model validation here
+		try {
+			OllamaModel theAvailableOllamaModel = OllamaModel.valueOf(ollamaModel.trim().toUpperCase().replaceAll("[.:-]", "_"));
+			logger.info("theAvailableOllamaModel:{}", theAvailableOllamaModel);
+		} catch (IllegalArgumentException e) {
+			throw new IllegalStateException("Invalid Ollama model configured: " + ollamaModel, e);
+		}
+	}
+	
 	@GetMapping("/basic")
 	public ResponseEntity<String> basicChat(@RequestParam String prompt) {
 		logger.info("prompt received={}", prompt);
