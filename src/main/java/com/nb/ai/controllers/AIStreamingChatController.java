@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import reactor.core.publisher.Flux;
 
@@ -96,6 +97,43 @@ public class AIStreamingChatController {
 		return emitter;
 	}
 	
+	// StreamingResponseBody allows a Spring MVC controller to write response data
+	// directly to the HTTP response OutputStream, making it useful for streaming
+	// large files or dynamically generated/streamed content without loading the
+	// complete response into memory.
+	@GetMapping(value = "/streaming-response-body", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	public StreamingResponseBody chatWithStreamResponseBody(String prompt) {
+
+		logger.info("***Start chatWithStreamResponseBody() prompt = {} ***", prompt);
+		if (prompt == null || prompt.isBlank()) {
+			throw new RuntimeException("Prompt cannot be empty");
+		}
+		StreamingResponseBody streamingResponseBody = (outputStream) -> {
+            chatClient.prompt()
+                .user(prompt)
+                .stream()
+                .content()
+                .doOnNext(
+                    token -> {
+                        try {
+                            outputStream.write(token.getBytes());
+                            outputStream.flush();
+                        } catch (Exception e) {
+                            // Handle write errors
+                        }
+                    })
+                .doOnComplete(() -> {
+                    try {
+                        outputStream.flush();
+                        outputStream.close();
+                    } catch (Exception e) {
+                        // Handle close errors
+                    }
+                })
+                .blockLast();
+        };
+        return streamingResponseBody;
+	}
 	
 	private SseEmitter createSseEmitter() {
 		
@@ -124,6 +162,7 @@ public class AIStreamingChatController {
 		});		
 		return emitter;
 	}
+
 	
 	private void processStreaming(String prompt, SseEmitter emitter) {
 		// Start an LLM streaming request
