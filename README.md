@@ -22,25 +22,29 @@ Spring AI 2 and building AI applications using Java and Spring Boot.
 
 ### 1. Install Ollama
 
-1.a Download and install Ollama for Windows:
+1.a Download and install Ollama for Windows from 'https://ollama.com/download/windows':
 
-https://ollama.com/download/windows
+[Download Ollama for Windows](https://ollama.com/download/windows)
+
 
 1.b Verify the installation in windows power shell or command prompt:
 
 ```bash
 ollama --version
 ```
+
 1.c Download llama3:
 
 ```bash
 ollama pull llama3
 ```
+
 1.d Run llama3:
 
 ```bash
 ollama run llama3
 ```
+
 1.e Test llama3 by typing a prompt after >>>
 
 ```bash
@@ -53,6 +57,7 @@ aspects of the input images.
 
 >>>
 ```
+
 1.f Stop llama3:
 
 ```bash
@@ -61,17 +66,22 @@ ollama stop llama3
 
 ### 2. Additional Useful Ollama commands
 
-2.a You can stop llama3 by pressing CTRL+C and then CTRL+D
+2.a You can stop llama3 by pressing CTRL+C and then CTRL+D or by typing /exit command
 
 2.b. Check the installed models
+
 ```bash
 ollama list
 ```
+
 2.c. Check whether Llama 3 is currently running/loaded
+
 ```bash
 ollama ps
 ```
+
 2.d. Remove the installed models
+
 ```bash
 ollama rm llama3
 ```
@@ -110,8 +120,9 @@ spring:
       base-url: https://api.groq.com/openai/v1
       api-key: ${GROQ_API_KEY}
       chat:
-        model: llama-3.3-70b-versatile
+        model: qwen/qwen3.6-27b
 ```
+
 the meanings are
 
 ```
