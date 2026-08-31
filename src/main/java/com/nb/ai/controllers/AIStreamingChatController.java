@@ -5,7 +5,6 @@ import java.util.concurrent.ExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,9 +29,9 @@ public class AIStreamingChatController {
 	
 	private ExecutorService executorService;
 	
-	public AIStreamingChatController(@Qualifier("ollamaChatModel") ChatModel ollamaChatModel,
+	public AIStreamingChatController(@Qualifier("ollamaChatClient") ChatClient chatClient,
 			@Qualifier("aiStreamingExecutor") ExecutorService executorService) {
-		this.chatClient = ChatClient.builder(ollamaChatModel).build();
+		this.chatClient = chatClient;
 		this.executorService = executorService;
 	}
 	

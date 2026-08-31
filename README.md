@@ -135,3 +135,12 @@ the meanings are
 | `model`        | A **Groq-hosted Llama model**                     |
 ```
 
+4.e.In the pom.xml add openai start dependency as shown below 
+
+```
+<dependency>
+    <groupId>org.springframework.ai</groupId>
+    <artifactId>spring-ai-starter-model-openai</artifactId>
+</dependency>
+
+```
