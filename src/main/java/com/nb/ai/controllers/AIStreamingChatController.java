@@ -81,7 +81,12 @@ public class AIStreamingChatController {
 		logger.info("***End chatWithStreamWithoutExecuterService() prompt = {} ***", prompt);
 		return emitter;
 	}
-
+	
+	/**
+	 * curl -N 'http://localhost:9002/ai-streaming-chat/response-body-emitter?prompt=Tell%20me%20a%20famous%20quote'
+	 * @param prompt
+	 * @return
+	 */
 	@GetMapping(value = "/response-body-emitter", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	public ResponseBodyEmitter chatWithStreamUsingResponseBodyEmitter(String prompt) {
 
@@ -101,6 +106,7 @@ public class AIStreamingChatController {
 	// directly to the HTTP response OutputStream, making it useful for streaming
 	// large files or dynamically generated/streamed content without loading the
 	// complete response into memory.
+	// curl -N 'http://localhost:9002/ai-streaming-chat/streaming-response-body?prompt=Please%20share%20content%20of%20text%20file%20containg%205%20famous%20quote'
 	@GetMapping(value = "/streaming-response-body", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	public StreamingResponseBody chatWithStreamResponseBody(String prompt) {
 
