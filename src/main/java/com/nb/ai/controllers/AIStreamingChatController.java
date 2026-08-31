@@ -29,9 +29,9 @@ public class AIStreamingChatController {
 	
 	private ExecutorService executorService;
 	
-	public AIStreamingChatController(ChatClient.Builder chatClientBuilder,
+	public AIStreamingChatController(@Qualifier("ollamaChatClient") ChatClient chatClient,
 			@Qualifier("aiStreamingExecutor") ExecutorService executorService) {
-		this.chatClient = chatClientBuilder.build();
+		this.chatClient = chatClient;
 		this.executorService = executorService;
 	}
 	

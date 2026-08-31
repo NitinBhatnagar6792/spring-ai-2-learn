@@ -14,6 +14,7 @@ import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.converter.BeanOutputConverter;
 import org.springframework.ai.ollama.api.OllamaChatOptions;
 import org.springframework.ai.ollama.api.OllamaModel;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,9 +39,9 @@ public class AIChatController {
 	private static final Logger logger = LoggerFactory.getLogger(AIChatController.class);
 
 	private final ChatClient chatClient;
-
-	public AIChatController(ChatClient.Builder chatClientBuilder) {
-		chatClient = chatClientBuilder.build();
+    
+	public AIChatController(@Qualifier("ollamaChatClient") ChatClient chatClient) {
+		this.chatClient = chatClient;
 	}
 
 	@PostConstruct
