@@ -39,9 +39,9 @@ public class AIToolingController {
 	@Autowired
 	private WeatherService weatherService;
 	
-	public AIToolingController(@Qualifier("openAiChatModel") ChatModel openAiChatModel) {
+	public AIToolingController(@Qualifier("openAiChatClient") ChatClient chatClient) {
 		
-		this.chatClient = ChatClient.builder(openAiChatModel).build();
+		this.chatClient = chatClient;
 	}
 	
     @GetMapping("/weather")
