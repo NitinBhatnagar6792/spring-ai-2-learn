@@ -30,26 +30,6 @@
           "response": []
         },
         {
-          "name": "get-ollama-api-tags",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "http://localhost:11434/api/tags",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "11434",
-              "path": [
-                "api",
-                "tags"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
           "name": "get-ollama-version",
           "request": {
             "method": "GET",
@@ -64,6 +44,26 @@
               "path": [
                 "api",
                 "version"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get-ollama-api-tags",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:11434/api/tags",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "11434",
+              "path": [
+                "api",
+                "tags"
               ]
             }
           },
@@ -171,6 +171,109 @@
               "path": [
                 "api",
                 "chat"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "grok",
+      "item": [
+        {
+          "name": "get-all-available-grok-models",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{GROQ_API_KEY}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "https://api.groq.com/openai/v1/models",
+              "protocol": "https",
+              "host": [
+                "api",
+                "groq",
+                "com"
+              ],
+              "path": [
+                "openai",
+                "v1",
+                "models"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get-grok-model-by-name",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{GROQ_API_KEY}}"
+              }
+            ],
+            "url": {
+              "raw": "https://api.groq.com/openai/v1/models/qwen/qwen3.6-27b",
+              "protocol": "https",
+              "host": [
+                "api",
+                "groq",
+                "com"
+              ],
+              "path": [
+                "openai",
+                "v1",
+                "models",
+                "qwen",
+                "qwen3.6-27b"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "chat-with-grok-model",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{GROQ_API_KEY}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"model\": \"qwen/qwen3.8-27b\", //\"qwen/qwen3.6-27b\",\r\n  \"messages\": [\r\n    {\r\n      \"role\": \"user\",\r\n      \"content\": \"What is the current weather in Mumbai?\"\r\n    }\r\n  ],\r\n  \"reasoning_effort\": \"none\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://api.groq.com/openai/v1/chat/completions",
+              "protocol": "https",
+              "host": [
+                "api",
+                "groq",
+                "com"
+              ],
+              "path": [
+                "openai",
+                "v1",
+                "chat",
+                "completions"
               ]
             }
           },
@@ -427,6 +530,48 @@
           "response": []
         },
         {
+          "name": "streaming-chat-sse-emitter-no-executer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9002/ai-streaming-chat/sse-emitter2?prompt=Tell me a famous quote",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9002",
+              "path": [
+                "ai-streaming-chat",
+                "sse-emitter2"
+              ],
+              "query": [
+                {
+                  "key": "prompt",
+                  "value": "Tell me a famous quote"
+                }
+              ]
+            },
+            "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+          },
+          "response": []
+        },
+        {
           "name": "streaming-chat-response-body-emitter",
           "event": [
             {
@@ -503,6 +648,358 @@
                 {
                   "key": "prompt",
                   "value": "Please share content of text file containg 5 famous quote"
+                }
+              ]
+            },
+            "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+          },
+          "response": []
+        },
+        {
+          "name": "multi-modal-chat-using-ollama",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9002/multi-modal-chat/chat/ollama?prompt=Tell me a name of a planet belonging to our solar system",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9002",
+              "path": [
+                "multi-modal-chat",
+                "chat",
+                "ollama"
+              ],
+              "query": [
+                {
+                  "key": "prompt",
+                  "value": "Tell me a name of a planet belonging to our solar system"
+                }
+              ]
+            },
+            "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+          },
+          "response": []
+        },
+        {
+          "name": "multi-modal-chat-using-openai",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9002/multi-modal-chat/chat/openai?prompt=Tell me a name of a planet belonging to our solar system",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9002",
+              "path": [
+                "multi-modal-chat",
+                "chat",
+                "openai"
+              ],
+              "query": [
+                {
+                  "key": "prompt",
+                  "value": "Tell me a name of a planet belonging to our solar system"
+                }
+              ]
+            },
+            "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+          },
+          "response": []
+        },
+        {
+          "name": "chat-with-tooling-static",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9002/ai-tooling/dynamic-tool-creation?prompt=Please tell the current weather of Mumbai",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9002",
+              "path": [
+                "ai-tooling",
+                "dynamic-tool-creation"
+              ],
+              "query": [
+                {
+                  "key": "prompt",
+                  "value": "Please tell the current weather of Mumbai"
+                }
+              ]
+            },
+            "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+          },
+          "response": []
+        },
+        {
+          "name": "chat-with-dynamic-tool-creation-example01",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9002/ai-tooling/dynamic-tool-creation?prompt=Generates a random number",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9002",
+              "path": [
+                "ai-tooling",
+                "dynamic-tool-creation"
+              ],
+              "query": [
+                {
+                  "key": "prompt",
+                  "value": "Generates a random number"
+                }
+              ]
+            },
+            "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+          },
+          "response": []
+        },
+        {
+          "name": "chat-with-dynamic-tool-creation-example02",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9002/ai-tooling/dynamic-tool-creation?prompt=Please reverse the sentence Hello AI",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9002",
+              "path": [
+                "ai-tooling",
+                "dynamic-tool-creation"
+              ],
+              "query": [
+                {
+                  "key": "prompt",
+                  "value": "Please reverse the sentence Hello AI"
+                }
+              ]
+            },
+            "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+          },
+          "response": []
+        },
+        {
+          "name": "chat-with-dynamic-tool-creation-example03",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9002/ai-tooling/dynamic-tool-creation?prompt=Please generate a random number and reverse it",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9002",
+              "path": [
+                "ai-tooling",
+                "dynamic-tool-creation"
+              ],
+              "query": [
+                {
+                  "key": "prompt",
+                  "value": "Please generate a random number and reverse it"
+                }
+              ]
+            },
+            "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+          },
+          "response": []
+        },
+        {
+          "name": "chat-with-dynamic-tool-selection-example01",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9002/ai-tooling/dynamic-tool-selection?prompt=Tell me the weather in Bangalore",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9002",
+              "path": [
+                "ai-tooling",
+                "dynamic-tool-selection"
+              ],
+              "query": [
+                {
+                  "key": "prompt",
+                  "value": "Tell me the weather in Bangalore"
+                }
+              ]
+            },
+            "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+          },
+          "response": []
+        },
+        {
+          "name": "chat-with-dynamic-tool-selection-example02",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9002/ai-tooling/dynamic-tool-selection?prompt=Check payment for paymentId pay123",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9002",
+              "path": [
+                "ai-tooling",
+                "dynamic-tool-selection"
+              ],
+              "query": [
+                {
+                  "key": "prompt",
+                  "value": "Check payment for paymentId pay123"
+                }
+              ]
+            },
+            "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+          },
+          "response": []
+        },
+        {
+          "name": "chat-with-dynamic-tool-selection-example03",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9002/ai-tooling/dynamic-tool-selection?prompt=Check customer having customerId cust123 and current weather of Mumbai",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9002",
+              "path": [
+                "ai-tooling",
+                "dynamic-tool-selection"
+              ],
+              "query": [
+                {
+                  "key": "prompt",
+                  "value": "Check customer having customerId cust123 and current weather of Mumbai"
                 }
               ]
             },
