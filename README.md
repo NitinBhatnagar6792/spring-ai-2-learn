@@ -120,7 +120,7 @@ spring:
       base-url: https://api.groq.com/openai/v1
       api-key: ${GROQ_API_KEY}
       chat:
-        model: qwen/qwen3.6-27b
+        model: qwen/qwen3.8-27b
 ```
 
 the meanings are
@@ -144,3 +144,15 @@ the meanings are
 </dependency>
 
 ```
+
+4.f How to check if a particular model is still supported by GROQ
+
+So it happened that in Aug-2026 model 'qwen/qwen3.6-27b' was available however by Oct-2026 it got replaced with 'qwen/qwen3.8-27b' so we can check if a model is still available using below CURL
+Please Note: You might need to pass in request header => Authorization Bearer '{GROQ_API_KEY}'
+
+```
+curl --location 'https://api.groq.com/openai/v1/models/qwen/qwen3.8-27b' \
+--header 'Authorization: Bearer '
+```
+
+
