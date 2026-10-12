@@ -741,7 +741,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "http://localhost:9002/ai-tooling/dynamic-tool-creation?prompt=Please tell the current weather of Mumbai",
+                  "raw": "http://localhost:9002/ai-tooling/static-tool-weather?prompt=Please tell the current weather of Mumbai",
                   "protocol": "http",
                   "host": [
                     "localhost"
