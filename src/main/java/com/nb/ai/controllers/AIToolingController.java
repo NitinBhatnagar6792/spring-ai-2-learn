@@ -1,6 +1,8 @@
 package com.nb.ai.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nb.ai.dto.CustomerRequest;
+import com.nb.ai.dto.PaymentRequest;
 import com.nb.ai.dto.ReverseStringPayload;
 import com.nb.ai.dto.WeatherRequest;
 
@@ -33,14 +37,21 @@ public class AIToolingController {
 	private final ChatClient chatClient;
 
 	private final FunctionToolCallback<WeatherRequest, String> weatherTool;
+	private final FunctionToolCallback<PaymentRequest, String> paymentTool;
+	private final FunctionToolCallback<CustomerRequest, String> customerTool;
 	
 	private static final int MIN_RANDOM_NUMBER = 100;
 	private static final int MAX_RANDOM_NUMBER = 1000;
 
 	public AIToolingController(@Qualifier("openAiChatClient") ChatClient chatClient,
-			FunctionToolCallback<WeatherRequest, String> weatherTool) {
+			FunctionToolCallback<WeatherRequest, String> weatherTool,
+			FunctionToolCallback<PaymentRequest, String> paymentTool,
+			FunctionToolCallback<CustomerRequest, String> customerTool
+			) {
 		this.chatClient = chatClient;
 		this.weatherTool = weatherTool;
+		this.paymentTool = paymentTool;
+		this.customerTool = customerTool;
 	}
 	
     @GetMapping("/static-tool-weather")
@@ -110,7 +121,52 @@ public class AIToolingController {
         return response;
     	
     }
+    
+    @GetMapping("/dynamic-tool-selection")
+    public String dynamicToolSelectionExample(@RequestParam String prompt) {
+    	logger.info("dynamicToolSelectionExample called for prompt : {}", prompt);
 
+        List<FunctionToolCallback<?, String>> selectedTools = new ArrayList<>();
+        String text = prompt.toLowerCase(Locale.ROOT);
+
+        if (text.contains("weather")
+                || text.contains("temperature")) {
+            selectedTools.add(weatherTool);
+        }
+
+        if (text.contains("payment")) {
+            selectedTools.add(paymentTool);
+        }
+
+        if (text.contains("customer")) {
+            selectedTools.add(customerTool);
+        }
+
+        if (selectedTools.isEmpty()) {
+            return "This request does not match an available tool.";
+        }
+        
+        List<String> tools = selectedTools.stream().map( t -> t.getToolDefinition().description()).toList();
+    	
+    	SystemMessage systemMessage = new SystemMessage(
+				"""
+				You are a helpful assistant who is good in answering using below available tools when appropriate.
+				%s
+    			""".formatted(tools));
+    	
+		UserMessage userMessage = new UserMessage(prompt);
+		Prompt thePrompt = new Prompt(List.of(systemMessage, userMessage), createOpenAiChatOptions());
+    	logger.info(" sending prompt: {}, to LLM with tools",thePrompt);
+
+        String response =  chatClient.prompt(thePrompt)
+                .tools(selectedTools.toArray())
+                .call()
+                .content();
+        logger.info("got response from llm {}", response);
+        return response;
+    	
+    }
+    
 	private OpenAiChatOptions createOpenAiChatOptions() {
 		return OpenAiChatOptions.builder()
     			.model(openaiModel)

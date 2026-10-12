@@ -3,10 +3,11 @@ package com.nb.ai.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.tool.function.FunctionToolCallback;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.nb.ai.dto.CustomerRequest;
+import com.nb.ai.dto.PaymentRequest;
 import com.nb.ai.dto.WeatherRequest;
 import com.nb.ai.dto.WeatherResponse;
 import com.nb.ai.services.WeatherService;
@@ -36,5 +37,32 @@ public class ToolConfig {
 		.inputType(WeatherRequest.class)
 		.build();
 	}
+
+
+	@Bean
+	FunctionToolCallback<PaymentRequest, String> paymentTool() {
+	    return FunctionToolCallback
+	        .builder("getPaymentStatus",
+	            (PaymentRequest request) ->
+	                "Payment " + request.paymentId()
+	                    + " has status SUCCESS")
+	        .description("Get the status of a payment using its paymentId.")
+	        .inputType(PaymentRequest.class)
+	        .build();
+	}
+
+	
+	@Bean
+	FunctionToolCallback<CustomerRequest, String> customerTool() {
+	    return FunctionToolCallback
+	        .builder("getCustomerDetails",
+	            (CustomerRequest request) ->
+	                "Customer " + request.customerId()
+	                    + " exist in our system")
+	        .description("Get the customer details using customerId.")
+	        .inputType(CustomerRequest.class)
+	        .build();
+	}
+	
 }
 
