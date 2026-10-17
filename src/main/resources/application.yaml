@@ -1,7 +1,6 @@
 spring:
   application:
     name: spring-ai2-learn
-
   ai:
     ollama:
       base-url: http://localhost:11434/
@@ -12,3 +11,24 @@ spring:
       api-key: ${GROQ_API_KEY}
       chat:
         model: qwen/qwen3.8-27b
+  datasource:
+    hikari:
+      initialization-fail-timeout: 60000
+      minimum-idle: 2
+      maximum-pool-size: 10
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        '[format_sql]': true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+    
