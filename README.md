@@ -156,3 +156,61 @@ curl --location 'https://api.groq.com/openai/v1/models/qwen/qwen3.8-27b' \
 ```
 
 
+### 5. Steps for configuring in memory H2 DB.
+
+5.a in pom.xml add below dependencies
+
+```
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-h2console</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+```
+
+5.b in application.yaml add below properties
+
+```
+spring:
+  datasource:
+    hikari:
+      initialization-fail-timeout: 60000
+      minimum-idle: 2
+      maximum-pool-size: 10
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        '[format_sql]': true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+```
+
+5.c include a sample favicon.ico to prevent 'No static resource favicon.ico for request '/favicon.ico'
+
+```
+folder Location: spring-ai-2-learn/src/main/resources/static <-- add favicon.ico file here
+You can generate a favicon.ico using website https://favicon.io
+```
+
+5.d you can access the h2 console at http://localhost:8080/h2-console
+
+5.e some sample h2 SQL are present in file spring-ai2-learn/h2-sql-cmds.sql
+
+
