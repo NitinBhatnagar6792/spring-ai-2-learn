@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nb.ai.services.SimpleChatMemoryService;
 
 @RestController
-@RequestMapping("/simple-memory")
+@RequestMapping("/simple-chat-memory")
 public class SimpleChatMemoryController {
 
 	private final ChatClient olamaChatClient;
@@ -30,7 +30,7 @@ public class SimpleChatMemoryController {
 		this.chatMemoryService = chatMemoryService;
 	}
 
-    @GetMapping("/chat/start")
+    @GetMapping("/start")
     public String startChat(@RequestParam String message) {
         
     	// Generate a new conversation id
@@ -59,7 +59,7 @@ public class SimpleChatMemoryController {
         return response;
     }
 
-    @GetMapping("/chat/follow-up/{conversationId}")
+    @GetMapping("/follow-up/{conversationId}")
     public String followUpChat(@PathVariable String conversationId, @RequestParam String message) {
 
         chatMemoryService.addChatMessage(conversationId, new UserMessage(message));
