@@ -749,7 +749,7 @@
                   "port": "9002",
                   "path": [
                     "ai-tooling",
-                    "dynamic-tool-creation"
+                    "static-tool-weather"
                   ],
                   "query": [
                     {
@@ -993,6 +993,129 @@
           ]
         },
         {
+          "name": "chat-memory",
+          "item": [
+            {
+              "name": "simple-chat-memory-start",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const responseText = pm.response.text();\r\n\r\nconst match = responseText.match(/conversationId:\\s*([a-f0-9-]+)/i);\r\n\r\nif (match) {\r\n    const conversationId = match[1];\r\n\r\n    pm.collectionVariables.set(\"conversationId\", conversationId);\r\n\r\n    console.log(\"conversationId:\", conversationId);\r\n} else {\r\n    console.error(\"conversationId not found in response\");\r\n}"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:9002/simple-chat-memory/start?message=Hello My name is John Doe and I live in London city and I love to eat Double Cheese Pizza",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "9002",
+                  "path": [
+                    "simple-chat-memory",
+                    "start"
+                  ],
+                  "query": [
+                    {
+                      "key": "message",
+                      "value": "Hello My name is John Doe and I live in London city and I love to eat Double Cheese Pizza"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "simple-chat-memory-follow-up-01",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:9002/simple-chat-memory/follow-up/{{conversationId}}?message=What is my name",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "9002",
+                  "path": [
+                    "simple-chat-memory",
+                    "follow-up",
+                    "{{conversationId}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "message",
+                      "value": "What is my name"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "simple-chat-memory-follow-up-02",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:9002/simple-chat-memory/follow-up/{{conversationId}}?message=In which city I live",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "9002",
+                  "path": [
+                    "simple-chat-memory",
+                    "follow-up",
+                    "{{conversationId}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "message",
+                      "value": "In which city I live"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "simple-chat-memory-follow-up-03",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:9002/simple-chat-memory/follow-up/{{conversationId}}?message=Which Pizza I like to eat",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "9002",
+                  "path": [
+                    "simple-chat-memory",
+                    "follow-up",
+                    "{{conversationId}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "message",
+                      "value": "Which Pizza I like to eat"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
           "name": "health-check",
           "event": [
             {
@@ -1028,6 +1151,12 @@
           "response": []
         }
       ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "conversationId",
+      "value": ""
     }
   ]
 }
