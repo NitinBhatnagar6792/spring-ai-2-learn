@@ -185,7 +185,7 @@ spring:
       initialization-fail-timeout: 60000
       minimum-idle: 2
       maximum-pool-size: 10
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:chatdb
     driver-class-name: org.h2.Driver
     username: sa
     password: ""
